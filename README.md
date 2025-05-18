@@ -134,3 +134,98 @@ Detailed API documentation available at `/api/docs/` when server is running.
 - PENDING: Invoice is awaiting payment
 - PAID: Invoice has been paid
 - OVERDUE: Payment deadline has passed
+
+## Implementation Overview
+
+### Frontend Implementation (`IMS_FRONTEND`)
+
+#### Component Structure
+- **Layout**: Responsive layout with Material-UI, featuring a persistent sidebar for navigation
+- **Common Components**:
+  - `FileUpload`: Handles file uploads with preview, validation, and progress indicator
+  - `StatusBadge`: Visual representation of invoice statuses using MUI Chips
+
+#### Pages
+1. **Vendor Management**:
+   - `VendorList`: Data grid displaying vendors with search and filter capabilities
+   - `VendorForm`: Form for creating/editing vendors with phone number formatting
+   - Real-time validation for email and phone formats
+
+2. **Invoice Management**:
+   - `InvoiceList`: Advanced data grid with status filtering and file preview
+   - `InvoiceForm`: Multi-part form handling file uploads and vendor selection
+   - Document preview and download functionality
+
+#### State Management
+- Custom hooks for data management:
+  - `useVendors`: Handles vendor CRUD operations
+  - `useInvoices`: Manages invoice operations and file handling
+- React Hook Form for form state management
+- Toast notifications for user feedback
+
+#### API Integration
+- Axios instance with base configuration
+- Centralized API service modules
+- File upload handling with FormData
+- Error handling with toast notifications
+
+### Backend Implementation (`IMS_BACKEND`)
+
+#### Project Structure
+- Django apps:
+  - `vendors`: Vendor management
+  - `invoices`: Invoice and file handling
+- Core configuration in `core` module
+- Utility functions in `utils` module
+
+#### Models
+1. **Vendor Model**:
+   - Basic vendor information (name, email, phone, address)
+   - Validation for unique email addresses
+   - Phone number formatting
+
+2. **Invoice Model**:
+   - Vendor relationship (ForeignKey)
+   - File storage with upload_to configuration
+   - Status tracking (PENDING, PAID, OVERDUE)
+   - Automatic timestamps
+
+#### API Features
+1. **ViewSets**:
+   - `VendorViewSet`: Full CRUD with nested invoice access
+   - `InvoiceViewSet`: File handling and status management
+
+2. **File Handling**:
+   - Secure file upload validation
+   - File type restrictions (PDF, images)
+   - Size limitations (5MB max)
+
+3. **Filtering & Search**:
+   - Django Filter backend for advanced querying
+   - Search functionality on relevant fields
+   - Ordering capabilities
+
+#### Security & Performance
+- CORS configuration for frontend access
+- File validation middleware
+- Efficient database queries
+- Error handling and validation
+
+## Key Features Implementation
+
+### File Management
+- Frontend: Progress tracking, preview capability, drag-n-drop
+- Backend: Secure storage, type validation, size restrictions
+
+### Search & Filter
+- Frontend: Real-time search in vendor list
+- Backend: Database-level filtering and search optimization
+
+### Form Validation
+- Frontend: Real-time validation with React Hook Form
+- Backend: Model-level and serializer validation
+
+### Responsive Design
+- Adaptive layout for different screen sizes
+- Mobile-friendly interface with collapsible sidebar
+- Optimized table views for small screens
